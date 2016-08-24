@@ -14,3 +14,419 @@ Raise your hand at any time during the workshop or shoot me an [e-mail](mailto:s
 
 ### Errors?
 If you find any mistake (typo or anything else), please make a pull request or [post an issue](https://github.com/SuyashLakhotia/NTUOSS-AngularJSWorkshop/issues/new)! Thanks!<br><br>
+
+
+## What is AngularJS?
+AngularJS is a powerful JavaScript framework built for dynamic web applications. It does this by extending the HTML DOM with additional attributes that make it more responsive to user actions. It also provides developers an easy way to write client-side applications in a clean MVC pattern. AngularJS is completely open source, free and used by thousands of developers around the world. It is currently licensed under the Apache license and being maintained by Google.
+
+## Prerequisites
+This workshop assumes you have a basic understanding of JavaScript and other common web technologies like the Document Object Model (DOM), HTML, CSS, AJAX etc.
+
+- Download &amp; install a text editor of your choice ([Sublime Text](https://www.sublimetext.com/3), for example).
+- Clone this repo on your local system or download the .zip [here](https://github.com/SuyashLakhotia/NTUOSS-AngularJSWorkshop/archive/master.zip) and open it up on the text editor.
+
+## Overview of AngularJS Concepts
+Because AngularJS brings with it a lot of new terminology &amp; concepts, it is important that we have a preliminary understanding of a few basic terms listed [here](https://docs.angularjs.org/guide/concepts). Don't worry if you don't understand all of them now as you will encounter these terms in practice as we proceed with the workshop tasks.
+
+## Task 1 - Data Binding
+Data binding in AngularJS is the automatic two-way synchronization of data between the model and view components. The way that Angular implements data binding lets you treat the model as the *single-source-of-truth* in your application i.e. the view is a projection of the model at all times. When the model changes, the view reflects the change **and vice-versa**.
+
+Let's create a simple example to demonstrate this. Open up `Task1.html` in your text editor.
+
+**Task1.html**
+
+```html
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <title>Data Binding</title>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
+    </head>
+    
+    <body>
+        <div ng-app>
+            <h1>Data Binding in AngularJS</h1>
+        </div>
+    </body>
+
+</html>
+```
+
+> Throughout this workshop, we'll be using a CDN to include AngularJS in our HTML files like we've done above inside the `<script>` tag. However, you can alternatively [download the source files](https://angularjs.org) or use a tool like [Bower](https://bower.io/).
+
+The `ng-app` directive defines where an Angular application is running on our page. In order to bind data in our application, we have to first set up a model for Angular to read data from.
+
+Create a text box inside `<div ng-app>`.
+
+```html
+<div ng-app>
+    <h1>Data Binding in AngularJS</h1>
+    <input type="text" ng-model="message">
+</div>
+```
+
+The `ng-model` directive tells Angular to bind the value of the input field to a property in the scope object &mdash; `$scope`.
+
+### Binding Using `{{}}`
+Now that we have a variable set up, we can bind `message` to our view using the double curly bracket syntax i.e. `{{}}`. Let's bind it to a `<p>` to display it.
+
+```html
+<div ng-app>
+    <h1>Data Binding in AngularJS</h1>
+    <input type="text" ng-model="message">
+    <p>{{ message }}</p>
+</div>
+```
+
+Now, if we start typing into the text field, we can see the text in the `<p>` tag automatically update. What is inside `{{}}` is called an Angular expression, which Angular evaluates and replaces with the results. Below are examples of a few more expressions you can plug into the view:
+
+```html
+<p>{{ message + message }}</p>
+<p>{{ message === 'Hamilton' }}</p>
+<p>{{ 2 + 3 }}</p>
+```
+
+### Binding Using `ng-bind`
+As applications get bigger, it is possible that we see `{{ expression }}` being rendered on the browser for a fraction of a second while Angular is still compiling the template(s). In order to avoid this, an alternative to the `{{}}` syntax is using the `ng-bind` attribute.
+
+```html
+<div ng-app>
+    <h1>Data Binding in AngularJS</h1>
+    <input type="text" ng-model="message">
+    <p ng-bind="message"></p>
+    <p ng-bind="message + message"></p>
+    <p ng-bind="message === 'Hamilton'"></p>
+    <p ng-bind="2 + 3"></p>
+</div>
+```
+
+However, a downside to using `ng-bind` is that `ng-bind` replaces the entire inner text of the HTML element. The following two lines serve the same purpose.
+
+```html
+<p>You typed: {{ message }}</p>
+<p ng-bind="'You typed: ' + message"></p>
+```
+
+### One-Time Binding
+Even though one of the main benefits of AngularJS is its continuous synchronization of data, this can end up being pretty resource intensive. Thus, one-time binding is useful when displaying data that is static or only needs to be read once from the source. This is achieved by prefixing the variable with `::`.
+
+```html
+<div ng-app>
+    <h1>Data Binding in AngularJS</h1>
+    <input type="text" ng-model="message" ng-init="message = 'Default'">
+    <p>{{ message }}</p>
+    <p>{{ ::message }}</p>
+</div>
+```
+
+Here, we also used the `ng-init` directive to initialize `message` with the value `Default`. `ng-init` is a directive that evaluates the given expression once the element is initialized. Note that `ng-init` should not be used regularly as scope variables should be initialized in your controller.
+
+## Task 2 - Controllers
+In Angular, a controller is defined by a JavaScript constructor function that is used to augment the Angular scope. When a controller is attached to the DOM via the `ng-controller` directive, Angular will instantiate a new controller object using the specified controller's constructor function. A new child scope will be created and made available as an injectable parameter to the controller's constructor function as `$scope`.
+
+The role of controllers in Angular is to expose data to our view via `$scope` (i.e. view model) &amp; add functions to `$scope` that contain business logic to enhance view behavior. Presentation logic should remain within views and directives.
+
+Open up `Task2.html` & `Task2.js` in your text editor.
+
+**Task2.html**
+
+```html
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <title>Controllers</title>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
+        <script type="text/javascript" src="Task2.js"></script>
+    </head>
+
+    <body>
+        <div ng-app="app">
+            <h1>Controllers in AngularJS</h1>
+        </div>
+    </body>
+
+</html>
+```
+
+Like we did in [Task 1](#task-1---data-binding), we create a simple Angular application using `ng-app`. However, we give the attribute a value this time to tell Angular which module to look for when the application *boots up*. In this case, our module's name is `app`.
+
+Let's go ahead and create the module in `Task2.js`.
+
+**Task2.js**
+
+```js
+var app = angular.module('app', []);
+```
+
+The first parameter in `angular.module()` defines the name of the module while the second parameter is an array of dependencies.
+
+Now, let's create a controller by adding the controller's constructor function to the module.
+
+**Task2.js**
+
+```js
+var app = angular.module('app', []);
+
+app.controller('mainCtrl', function($scope) {
+
+});
+```
+
+The `.controller()` function accepts the name of the controller as the first parameter and the controller's constructor function as the second. Angular will pass the child scope as an object i.e. `$scope` to the controller's constructor.
+
+Let's add some data to the `$scope` object which we can then display in our view.
+
+**Task2.js**
+
+```js
+var app = angular.module('app', []);
+
+app.controller('mainCtrl', function($scope) {
+    $scope.message = 'Hello, NTUOSS';
+});
+```
+
+**Task2.html**
+
+```html
+<div ng-app="app">
+    <h1>Controllers in AngularJS</h1>
+    <div ng-controller="mainCtrl">
+        <p>{{ message }}</p>
+    </div>
+</div>
+```
+
+In our view, we simply need to attach the controller to the DOM using the `ng-controller` directive and we can subsequently access any property stored in `$scope`.
+
+We can also manipulate the properties stored in `$scope` using custom functions in our controller.
+
+**Task2.js**
+
+```js
+var app = angular.module('app', []);
+
+app.controller('mainCtrl', function($scope) {
+    $scope.message = 'Hello, NTUOSS';
+
+    $scope.updateMessage = function(newMessage) {
+        $scope.message = newMessage;
+    };
+});
+```
+
+**Task2.html**
+
+```html
+<div ng-app="app">
+    <h1>Controllers in AngularJS</h1>
+    <div ng-controller="mainCtrl">
+        <p>{{ message }}</p>
+        <form ng-submit="updateMessage(newMessage)">
+            <input type="text" ng-model="newMessage">
+            <button type="submit">Update Message</button>
+        </form>
+    </div>
+</div>
+```
+
+The `ng-submit` directive contains an Angular expression that is fired whenever the form is submitted. Now, whenever the user submits the form, the `updateMessage()` function will be called which will update the value of `$scope.message`.
+
+### Controller As Syntax
+While everything we've created so far works perfectly, things can get messy when you start nesting controllers, and thus, create nested scopes. This can make it difficult for child scopes to explicitly refer to variables in the parent scope since there is no namespacing.
+
+```html
+<div ng-controller="parentCtrl">
+    <p>{{ message }}</p>
+    <div ng-controller="childCtrl">
+        <p>{{ message }}</p>
+    </div>
+</div>
+```
+
+Assuming both `parentCtrl` & `childCtrl` have variables in their scopes named `message`, the inner `<p>` can only refer to `message` in `childCtrl`'s scope.
+
+The solution to this problem is the "controller as" syntax where the controller constructors are coded like we would code a class in JavaScript.
+
+**Task2.js**
+
+```js
+var app = angular.module('app', []);
+
+app.controller('mainCtrl', function() {
+    var self = this;
+
+    self.message = 'Hello, NTUOSS';
+
+    self.updateMessage = function(newMessage) {
+        self.message = newMessage;
+    };
+});
+```
+
+**Task2.html**
+
+```html
+<div ng-app="app">
+    <h1>Controllers in AngularJS</h1>
+    <div ng-controller="mainCtrl as main">
+        <p>{{ main.message }}</p>
+        <form ng-submit="main.updateMessage(main.newMessage)">
+            <input type="text" ng-model="main.newMessage">
+            <button type="submit">Update Message</button>
+        </form>
+    </div>
+</div>
+```
+
+Using this syntax, we can explicitly refer to a particular controller when we have multiple nested controllers.
+
+## Task 3 - Services
+Angular services are substitutable objects that are wired together using dependency injection. They can be used to easily share data & functionality across the app. They are:
+
+- Lazily Instantiated - Angular only instantiates a service when an application component depends on it.
+- Singletons - Each component dependent on a service gets a reference to the single instance generated by the service factory.
+
+Angular offers several useful services (like `$http`), but for most applications you'll also want to create your own.
+
+Let's start with the following code:
+
+**Task3.html**
+
+```html
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <title>Services</title>
+      <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
+      <script type="text/javascript" src="Task3.js"></script>
+  </head>
+
+  <body>
+      <div ng-app="app">
+          <h1>Services in AngularJS</h1>
+      </div>
+  </body>
+
+</html>
+```
+
+Let's go ahead and create a service to store messages.
+
+**Task3.js**
+
+```js
+angular.module('app', []);
+
+angular.module('app').factory('messages', function() {
+
+});
+```
+
+We use the module factory API &mdash; `.module()` &mdash; to register a service.
+
+Let's add an empty object & return it. This will be the object that components which depend on this service will receive.
+
+**Task3.js**
+
+```js
+angular.module('app', []);
+
+angular.module('app').factory('messages', function() {
+    var messages = {};
+
+    return messages;
+});
+```
+
+Let's add a couple properties to this object to store the messages & add new messages.
+
+**Task3.js**
+
+```js
+angular.module('app', []);
+
+angular.module('app').factory('messages', function() {
+    var messages = {};
+
+    messages.list = [];
+
+    messages.add = function(message) {
+        messages.list.push({id: messages.list.length, text: message});
+    };
+
+    return messages;
+});
+```
+
+Now that our service is ready, let's add a couple controllers to our module to make use of it.
+
+**Task3.js**
+
+```js
+angular.module('app').controller('listCtrl', ['messages', function(messages) {
+    var self = this;
+
+    self.messages = messages.list;
+}]);
+```
+
+**Task3.html**
+
+```html
+<div ng-app="app">
+    <h1>Services in AngularJS</h1>
+    <div ng-controller="listCtrl as list">
+        <p ng-repeat="message in list.messages">{{ message.id }}: {{ message.text }}</p>
+    </div>
+</div>
+```
+
+The `ng-repeat` directive iterates over collections in a view, repeating the contents of the element where `ng-repeat` is used.
+
+Let's create another controller to help us add messages to our list.
+
+**Task3.js**
+
+```js
+angular.module('app').controller('addCtrl', ['messages', function(messages) {
+    var self = this;
+
+    self.addMessage = function(message) {
+        messages.add(message);
+    };
+}]);
+```
+
+Create a form underneath the list we just added that uses `addCtrl`.
+
+**Task3.html**
+
+```html
+<div ng-controller="addCtrl as add">
+    <form ng-submit="add.addMessage(add.newMessage)">
+        <input type="text" ng-model="add.newMessage">
+        <button type="submit">Add Message</button>
+    </form>
+</div>
+```
+
+We can also set a default message in the `<input>` and clear the `<input>` when the form is submitted.
+
+**Task3.js**
+
+```js
+angular.module('app').controller('addCtrl', ['messages', function(messages) {
+    var self = this;
+
+    self.newMessage = 'Hello NTUOSS!';
+
+    self.addMessage = function(message) {
+        messages.add(message);
+        self.newMessage = '';
+    };
+}]);
+```
