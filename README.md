@@ -6,7 +6,7 @@
 
 ### Workshop Details:
 **When?**: Friday, 26 August 2016. 6:30 PM - 8:30 PM.<br>
-**Where?**: Nanyang Technological University<br>
+**Where?**: Theatre@TheNest, Innovation Centre, Nanyang Technological University<br>
 **Who?**: NTU Open Source Society<br>
 
 ### Questions?
