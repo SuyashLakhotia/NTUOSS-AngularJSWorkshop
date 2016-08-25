@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <title>Filters</title>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
+        <script type="text/javascript" src="Task4.js"></script>
+    </head>
+
+    <body>
+        <div ng-app="app">
+            <h1>Filters in AngularJS</h1>
+            <div ng-controller="mainCtrl as main">
+                <p ng-repeat="person in main.people">
+                    {{ person.name }}, {{ person.country }}
+                </p>
+            </div>
+        </div>
+    </body>
+
+</html>

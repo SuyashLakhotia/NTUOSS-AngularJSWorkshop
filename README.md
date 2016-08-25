@@ -430,3 +430,176 @@ angular.module('app').controller('addCtrl', ['messages', function(messages) {
     };
 }]);
 ```
+
+## Task 4 - Filters
+Filters are a simple but powerful tool in Angular. They're primarily used to filter through collections or format values returned by Angular expressions.
+
+Let's list a few names in a simple view using concepts we've just learned.
+
+**Task4.html**
+
+```html
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <title>Filters</title>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
+        <script type="text/javascript" src="Task4.js"></script>
+    </head>
+
+    <body>
+        <div ng-app="app">
+            <h1>Filters in AngularJS</h1>
+            <div ng-controller="mainCtrl as main">
+                <p ng-repeat="person in main.people">
+                    {{ person.name }}, {{ person.country }}
+                </p>
+            </div>
+        </div>
+    </body>
+
+</html>
+```
+
+**Task4.js**
+
+```js
+function mainCtrl() {
+    var self = this;
+    self.people = [{
+        name: "Eric Simons",
+        country: "USA"
+    }, {
+        name: "Albert Pai",
+        country: "Singapore"
+    }, {
+        name: "Matthew Greenster",
+        country: "Sweden"
+    }, {
+        name: "Tim Brown",
+        country: "USA"
+    }, {
+        name: "Jake Trump",
+        country: "Canada"
+    }, {
+        name: "Albert Potter",
+        country: "Canada"
+    }, {
+        name: "Bob Dylan",
+        country: "USA"
+    }, {
+        name: "Bernie Sanders",
+        country: "Singapore"
+    }, {
+        name: "Dwayne Johnson",
+        country: "USA"
+    }, {
+        name: "Albert Colbert",
+        country: "Germany"
+    }];
+}
+
+angular.module('app', [])
+    .controller('mainCtrl', mainCtrl);
+```
+
+### Built-in Filters
+Let's start by playing around with a couple built-in Angular filters to filter through our collection &mdash; `people`.
+
+#### `orderBy`
+The `orderBy` filter sorts the items in a collection using a particular field.
+
+**Task4.html**
+
+```html
+<p ng-repeat="person in main.people | orderBy:'name'">
+    {{ person.name }}, {{ person.country }}
+</p>
+```
+
+The code above will sort the array elements using `name` in ascending order. Using `-name` will sort it in the opposite order.
+
+#### `limitTo`
+The `limitTo` filter returns the first `n` results. Using `-n` returns the last `n` results.
+
+**Task4.html**
+
+```html
+<p ng-repeat="person in main.people | limitTo:4">
+    {{ person.name }}, {{ person.country }}
+</p>
+```
+
+#### `filter`
+`filter` allows for filtering a collection based on a search string.
+
+**Task4.html**
+
+```html
+<input type="text" ng-model="search"/>
+<p ng-repeat="person in main.people | filter:search">
+    {{ person.name }}, {{ person.country }}
+</p>
+```
+
+By default, this will search all the field in the `person` objects (i.e. `name` & `country`). In order to force it to only search for the string in a particular field, the field name has to be specified in the model like so:
+
+```html
+<input type="text" ng-model="search.country"/>
+```
+
+### Chaining Filters
+Angular filters can be chained together using the same pipe operator &mdash; `|`. The filters are applied sequentially on the results of the previous collection filter.
+
+**Task4.html**
+
+```html
+<input type="text" ng-model="search"/>
+<p ng-repeat="person in main.people | filter:search | limitTo:2">
+    {{ person.name }}
+</p>
+```
+
+### Custom Filters
+You can also define your own custom filters in AngularJS. Let's define one to convert each person's name to uppercase.
+
+**Task4.js**
+
+```js
+function mainCtrl() { ... }
+
+function makeUpperCase() {
+    return function(item) {
+        return item.toUpperCase();
+    };
+}
+
+angular.module('app', [])
+    .filter('makeUpperCase', makeUpperCase)
+    .controller('mainCtrl', mainCtrl);
+```
+
+**Task4.html**
+
+```html
+<p ng-repeat="person in main.people">
+    {{ person.name | makeUpperCase}}, {{ person.country }}
+</p>
+```
+
+We define the filter in `Task4.js` by creating its factory function and registering it to the module using `.filter()`. It can then be applied to any Angular expression that returns a string like `{{ person.name }}`.
+
+
+## Task ∞ - Going Forward
+In closing, I would just like to say that this workshop definitely does not cover everything that AngularJS has to offer. To learn more about AngularJS, you can check out the links below:
+
+- [http://docs.angularjs.org/](http://docs.angularjs.org/)
+- [https://www.coursera.org/learn/angular-js/](https://www.coursera.org/learn/angular-js/)
+- [http://ruoyusun.com/2013/05/25/things-i-wish-i-were-told-about-angular-js.html](http://ruoyusun.com/2013/05/25/things-i-wish-i-were-told-about-angular-js.html)
+- [http://www.tutorialspoint.com/angularjs/angularjs_overview.htm](http://www.tutorialspoint.com/angularjs/angularjs_overview.htm)
+- [https://www.codeschool.com/courses/shaping-up-with-angular-js](https://www.codeschool.com/courses/shaping-up-with-angular-js)
+- [https://thinkster.io/a-better-way-to-learn-angularjs](https://thinkster.io/a-better-way-to-learn-angularjs)
+- [http://code.tutsplus.com/tutorials/5-awesome-angularjs-features--net-25651](http://code.tutsplus.com/tutorials/5-awesome-angularjs-features--net-25651)
+
+*P.S. There is a [new version of Angular](https://angular.io/) built for mobile &amp; desktop that got out of beta very recently.*
