@@ -349,7 +349,7 @@ Let's add a couple properties to this object to store the messages & add new mes
 ```js
 var app = angular.module('app', []);
 
-app.('messages', function() {
+app.factory('messages', function() {
     var messages = {};
 
     messages.list = [];
