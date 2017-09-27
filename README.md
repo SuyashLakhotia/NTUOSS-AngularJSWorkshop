@@ -1,4 +1,4 @@
-# NTUOSS-AngularJSWorkshop
+# NTUOSS AngularJS Workshop
 
 *by Suyash Lakhotia for NTU Open Source Society*
 
